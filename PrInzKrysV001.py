@@ -1,8 +1,10 @@
 import numpy as np
 from scipy.integrate import solve_ivp
+import scienceplots
 import matplotlib.pyplot as plt
 
-plt.style.use('bmh')
+plt.style.reload_library()
+plt.style.use('seaborn-v0_8')
 
 t = np.linspace(0, 0.25, 300)
 
@@ -48,10 +50,10 @@ def model_SDR(t, y):
     
     
 y0 = [0.0017e6 / 44, 4e3 / 74.093, 0, 10e-8, 0]
-sol = solve_ivp(model_SDR, [0, 0.1], y0, max_step=1e-6)
+sol = solve_ivp(model_SDR, [0, 0.025], y0, max_step=1e-6)
 plt.figure(figsize=(10,6))
 plt.plot(sol.t, sol.y[2])
-plt.title('Zmiana stężenia CaCO3')
+plt.title(r'$\Delta$ $C_{CaCO3}$')
 plt.xlabel('Czas [s]')
 plt.ylabel('mol/m3')
 plt.savefig('CaCo3.png')
@@ -59,23 +61,23 @@ plt.savefig('CaCo3.png')
 
 plt.figure(figsize=(10,6))
 plt.plot(sol.t, sol.y[3])
-plt.title('Średnica kryształu')
+plt.title(r'$d_{kryszt}$')
 plt.xlabel('czas [s]')
 plt.ylabel('d [m]')
-plt.yscale('symlog')
 plt.savefig('Rozmiar.png')
+plt.yticks(np.linspace(1e-7, 1.00005e-7, 5))
 
 
 plt.figure(figsize=(10,6))
 plt.plot(sol.t, sol.y[4])
-plt.title('Liczba kryształów')
+plt.title(r'$N_{kryszt}$')
 plt.xlabel('czas [s]')
 plt.ylabel('N [#/m3]')
 plt.savefig('Liczba.png')
 
 plt.figure(figsize=(10,6))
 plt.plot(sol.t, sol.y[1])
-plt.title('Zmiana stężenia/ilości CaOH w układzie')
+plt.title(r'$\Delta$ $C_{Ca(OH)_2}$')
 plt.xlabel('czas [s]')
 plt.ylabel('mol/m3')
 plt.savefig('CaOH.png')
@@ -92,3 +94,5 @@ plt.xlabel('czas [s]')
 plt.ylabel('[-]')
 plt.savefig('Przesycenie.png')
 plt.show()
+
+print(sol.y[-2])
