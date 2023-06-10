@@ -94,5 +94,3 @@ plt.xlabel('czas [s]')
 plt.ylabel('[-]')
 plt.savefig('Przesycenie.png')
 plt.show()
-
-print(sol.y[-2])
