@@ -1,4 +1,4 @@
-from aggreg_func import aggreg_func
+# from aggreg_func import aggreg_func
 
 def model_SDR(t, y, dane_init, dane_fiz):
     """
@@ -23,13 +23,14 @@ def model_SDR(t, y, dane_init, dane_fiz):
         cryst_nuc = dane_fiz['k_nuc'] * (y[2] - c_satur)**n   
     else:
         cryst_nuc = 0
-        
-    s = y[2] ** 2 / dane_fiz['k_sp']
 
-    if (y[4] > 0):
-        agg_rate = aggreg_func(y[3], 3e-8, **{'n_0': y[4], 'n_L': y[5], 'lambda_s': s}) * 1e10
-    else:
-        agg_rate = 0
+    # # Stopień przesycenia
+    # s = y[2] ** 2 / dane_fiz['k_sp']
+
+    # if (y[4] > 0):
+    #     agg_rate = aggreg_func(y[3], 3e-8, **{'n_0': y[4], 'n_L': y[5], 'lambda_s': s}) * 1e10
+    # else:
+    #     agg_rate = 0
         
     # Stężenie CO2 utzrymywane na stałym poziomie
     dCO2dt = 0
@@ -40,8 +41,8 @@ def model_SDR(t, y, dane_init, dane_fiz):
   
     
     # Przyrost rozmiaru kryształu
-    dddt = cryst_growth * 2 + agg_rate * 2
-    dNdt = cryst_nuc - agg_rate
-    dAggdt = agg_rate
+    dddt = cryst_growth * 2 
+    # Zmiana liczby kryształów
+    dNdt = cryst_nuc 
     
-    return [dCO2dt, dCaOHdt, dCaCO3dt, dddt, dNdt, dAggdt]
+    return [dCO2dt, dCaOHdt, dCaCO3dt, dddt, dNdt]
