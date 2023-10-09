@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 plt.style.reload_library()
-plt.style.use('seaborn-v0_8')
+plt.style.use('bmh')
 
 def plotuj(sol, dane_init, dane_fiz):
     """
@@ -58,11 +58,3 @@ def plotuj(sol, dane_init, dane_fiz):
     plt.xlabel('czas [s]')
     plt.ylabel('[-]')
     plt.savefig('Wykresy/Przesycenie.png')
-
-    plt.figure(figsize=(10,6))
-    plt.plot(sol.t, sol.y[-1])
-    plt.title('Liczba agregatów')
-    plt.xlabel('czas [s]')
-    plt.ylabel('[-]')
-    plt.savefig('Wykresy/Agregacja.png')
-    plt.show()

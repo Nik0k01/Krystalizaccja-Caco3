@@ -1,6 +1,8 @@
 from scipy.integrate import solve_ivp
 from model_SDR import model_SDR
 from plotuj import plotuj
+import xlwings as xw
+import numpy as np
 
 def main():  
     # Dane fizyczne; stała rozpuszczalności, stałe kinetyczne, współczynniki równań...
@@ -19,11 +21,21 @@ def main():
     caco3_init = 0
     d_kryszt_init = 30e-9
     crystal_number = 0
-    aggregate_number = 0
     
-    y0 = [co2_sol_max, caoh_system, caco3_init, d_kryszt_init, crystal_number, aggregate_number]
-    sol = solve_ivp(model_SDR, [0, t], y0, max_step=1e-2, args=(dane_init, dane_fiz))
+    y0 = [co2_sol_max, caoh_system, caco3_init, d_kryszt_init, crystal_number]
+    sol = solve_ivp(model_SDR, [0, t], y0, args=(dane_init, dane_fiz))
     plotuj(sol, dane_init, dane_fiz)
+
+    book = xw.Book('template.xltx')
+    sheet = book.sheets[0]
+    sheet['B3'].options(transpose=True).value = sol.t
+    sheet['C3'].options(transpose=True).value = sol.y[0]
+    sheet['D3'].options(transpose=True).value = sol.y[1]
+    sheet['E3'].options(transpose=True).value = sol.y[2]
+    sheet['F3'].options(transpose=True).value = sol.y[3]
+    sheet['G3'].options(transpose=True).value = sol.y[4]
+    book.save('wyniki.xlsx')
+    book.close()
 
 if __name__ == "__main__":
     main()

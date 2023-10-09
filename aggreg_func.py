@@ -10,7 +10,7 @@ def aggreg_func(sz_1, sz_2=30e-9, **kargs):
     # sz_2 - rozmiar, od którego kryształy aglomerują - składowe aglomeratów
     # w kargs podawane są ilości kryształów o rozmiarze sz_1 i sz_2, które były w układzie w poprzednim kroku całkowania
     # Stała agregacji - Rigopulos
-    k_a = 2.3
+    k_a = 1.2
     # Stała wykładnicza wzrostu kryształu
     g = 2.0
     
