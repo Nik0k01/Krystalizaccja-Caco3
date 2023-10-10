@@ -34,7 +34,7 @@ def main():
     sheet['E3'].options(transpose=True).value = sol.y[2]
     sheet['F3'].options(transpose=True).value = sol.y[3]
     sheet['G3'].options(transpose=True).value = sol.y[4]
-    book.save('wyniki.xlsx')
+    book.save('Tabele_pliki_txt/Nukleacja.xlsx')
     book.close()
 
 if __name__ == "__main__":
