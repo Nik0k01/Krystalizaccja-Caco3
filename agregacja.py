@@ -25,7 +25,7 @@ crystal_size = 30
 crystal_per_loop = 54
 
 rpm = 120
-loops_num = 14 * rpm
+loops_num = 14 * rpm * 2
 
 crystal_array = np.array([])
 df = 3

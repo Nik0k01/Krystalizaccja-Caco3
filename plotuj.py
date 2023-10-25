@@ -10,7 +10,8 @@ def plotuj(sol, dane_init, dane_fiz):
     """
     
     plt.figure(figsize=(10,6))
-    plt.plot(sol.t, sol.y[2])
+    plt.plot(sol.t, sol.y[2],
+             sol.t, np.ones(len(sol.t)) * 0.05890670590009256)
     plt.title(r'$\Delta$ $C_{CaCO3}$')
     plt.xlabel('Czas [s]')
     plt.ylabel('mol/m3')
@@ -48,8 +49,7 @@ def plotuj(sol, dane_init, dane_fiz):
     plt.savefig('Wykresy/CaOH.png')
 
 
-    a = np.where(sol.y[1] < dane_init['c_caoh_max'], sol.y[1], dane_init['c_caoh_max'])
-    s = sol.y[2] ** 2 / dane_fiz['k_sp']
+    s = sol.y[2] - np.sqrt(dane_fiz['k_sp'])
     # s[s < 0] = 0
 
     plt.figure(figsize=(10,6))
