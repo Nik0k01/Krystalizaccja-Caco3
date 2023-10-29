@@ -1,31 +1,17 @@
 import numpy as np
 import pandas as pd
 import random
-from scipy.stats import chi
-import matplotlib.pyplot as plt
-plt.style.use('bmh')
+from probability_generator import probability_generator
+from aglomer_plot import aglomer_plot
+from collision_handler import collision_handler
 
 file = open("Tabele_pliki_txt/Agregacja.txt", "w")
 
-def collision_handler(total_size, size_list=None):
-    if size_list is None:
-        size_list = []
-        
-    if total_size > 210:
-        first_size = random.choice(np.array([30, 60, 90, 120, 150, 180]))
-        size_list.append(first_size)
-        total_size = total_size - first_size
-        collision_handler(total_size, size_list)
-    else:
-        first_size = total_size
-        size_list.append(first_size)
-    return size_list
-
 crystal_size = 30
-crystal_per_loop = 54
+crystal_per_loop = 1000
 
 rpm = 120
-loops_num = 14 * rpm * 2
+loops_num = 7 * rpm * 2
 
 crystal_array = np.array([])
 df = 3
@@ -39,12 +25,7 @@ for _ in range(loops_num):
     np.random.shuffle(crystal_array)
     crystal_series = pd.Series(crystal_array, copy=True)
 
-    x = np.arange(1, len(crystal_array))
-    probabils = chi.pdf(x, df, round(len(crystal_array) / 35), len(crystal_array)/10)
-    
-    if sum(probabils) < 1:
-        probabils[0] += 1 - sum(probabils) 
-    
+    x, probabils = probability_generator(crystal_array, df) 
     num_to_remove = np.random.choice(x, p=probabils)
     
     if (num_to_remove % 2) != 0:
@@ -75,18 +56,6 @@ for _ in range(loops_num):
     file.write("=================================================\n")
 
     crystal_number[str(_)] = len(crystal_array)
+
 file.close()
-
-plt.figure(dpi=600, figsize=(6,4))
-plt.hist(crystal_array, bins=7, rwidth=0.9)
-plt.xlabel("Rozmiar [nm]")
-plt.ylabel("Liczba kryształów [-]")
-plt.savefig("Wykresy/aglomeracja.png")
-
-iters = list(map(int, list(crystal_number.keys())))
-crystal_number = list(crystal_number.values())
-plt.figure(dpi=600, figsize=(6,4))
-plt.plot(iters, crystal_number)
-plt.xlabel("Iteracja")
-plt.ylabel("Całkowita liczba kryształów [-]")
-plt.savefig("Wykresy/l_kryst_aglomer_iter.png")
+aglomer_plot(crystal_array, crystal_number)

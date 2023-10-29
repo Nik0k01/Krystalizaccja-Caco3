@@ -1,8 +1,6 @@
-# from aggreg_func import aggreg_func
 import math
-import numpy as np
 
-def model_SDR(t, y, dane_init, dane_fiz):
+def model_RDR(t, y, dane_init, dane_fiz):
     """
     Ta funkcja ma za zadanie zdefiniować układ równań różniczkowych zwyczajnych, opisujących
     krystalizację węglanu wapnia w reaktorze z obrotowymi dyskami
@@ -15,10 +13,12 @@ def model_SDR(t, y, dane_init, dane_fiz):
     
     # Rozmiar zarodka
     crystal_init_d = dane_init['d_init']
-    # Gęstość molowa kryształów
+    # Gęstość kryształów - kg/m3
     crystal_density = dane_fiz['crystal_density']
-    # Masa molowa
+    # Masa molowa kg/kmol
     molar_mass = dane_fiz['molar_mass']
+    # Molar density mol/m3
+    molar_density = crystal_density / molar_mass * 1000
     # Stała szybkości reakcji
     k = dane_fiz['k_rxn']
     # Wykładniki i stałe wzrostu i nukleacji
@@ -44,22 +44,19 @@ def model_SDR(t, y, dane_init, dane_fiz):
 
     # Stężenie CO2 utzrymywane na stałym poziomie
     dCO2dt = 0
-    
     # Zmiana stężenia zasady wapniowej - w wyniku reakcji 
-    dCaOHdt = - k * c_CO2 * c_CaOH
-        
-    # Mole węglanu pochłonięta na zarodkowanie
-    nuc_mol = (crystal_density * cryst_nuc * 
-                crystal_init_d ** 3 * math.pi / 6 * 1000 / molar_mass)
-
+    dCaOHdt = - k * c_CO2 * c_CaOH    
+    # Mole węglanu pochłonięte na zarodkowanie
+    nuc_mol = molar_density * math.pow(crystal_init_d, 3) * math.pi / 6 * cryst_nuc 
         
     # Uproszczone wyrażenie na ilość moli pochłoniętych na wzrost (pomijalna)
-    growth_mol = (math.pi / 6 * ((crystal_d + cryst_growth * 2) ** 3 - 
-                    crystal_d ** 3) * crystal_No * crystal_density * 1000 /molar_mass) 
+    crystal_dist = [(1, 30e-9)]
+    growth_mol = 0
+    for x in crystal_dist:
+        growth_mol += math.pi * molar_density * x[0] * x[1] ** 2 * cryst_growth * crystal_No
     
-    # Stężenie węglanu
+    # Zmiana stężenia węglanu wapnia
     dCaCO3dt = -dCaOHdt - growth_mol - nuc_mol
-  
     # Przyrost rozmiaru kryształu
     dddt = cryst_growth
     # Zmiana liczby kryształów
